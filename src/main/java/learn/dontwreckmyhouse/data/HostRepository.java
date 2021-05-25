@@ -3,10 +3,12 @@ package learn.dontwreckmyhouse.data;
 import learn.dontwreckmyhouse.models.Guest;
 import learn.dontwreckmyhouse.models.Host;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public interface HostRepository {
-    List<Host> findAll();
+
+    List<Host> findAll() throws DataException;
 
     Host findByEmail(String email);
 

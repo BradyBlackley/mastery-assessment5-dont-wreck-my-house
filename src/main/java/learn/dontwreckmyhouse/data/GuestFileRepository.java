@@ -19,11 +19,8 @@ public class GuestFileRepository implements GuestRepository {
     public List<Guest> findAll() throws DataException {
         ArrayList<Guest> result = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-
             reader.readLine(); // read header
-
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
-
                 String[] fields = line.split(",", -1);
                 if (fields.length == 6) {
                     result.add(deserialize(fields));
@@ -94,9 +91,7 @@ public class GuestFileRepository implements GuestRepository {
 
     private void writeToFile(List<Guest> guests) throws DataException {
         try (PrintWriter writer = new PrintWriter(filePath)) {
-
             writer.println(HEADER);
-
             for (Guest guest : guests) {
                 writer.println(serialize(guest));
             }

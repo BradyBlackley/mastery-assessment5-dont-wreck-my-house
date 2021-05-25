@@ -2,7 +2,7 @@ package learn.dontwreckmyhouse.models;
 
 public class Host {
 
-    private int hostId;
+    private String hostId;
     private String lastName;
     private String email;
     private String phone;
@@ -13,11 +13,11 @@ public class Host {
     private double standardRate;
     private double weekendRate;
 
-    public int getHostId() {
+    public String getHostId() {
         return hostId;
     }
 
-    public void setHostId(int hostId) {
+    public void setHostId(String hostId) {
         this.hostId = hostId;
     }
 
