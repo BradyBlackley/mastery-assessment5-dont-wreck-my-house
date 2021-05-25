@@ -1,0 +1,61 @@
+View Reservations for Host
+- View: Get host from unique ID or printed list
+- Service: Find host and return reservations
+    - Display message if:
+        - No host found
+        - No reservations under host
+- View: Display reservations
+    - Order: ID#,Dates,Guest,GuestEmail
+
+Make a Reservation
+- View: Get host from unique ID or printed list
+- View: Get guest from unique ID or printed list
+- Service: Find host and return reservations
+    - Display message if:
+        - No host found
+- Service: Find guest
+    - Display message if:
+        - No guest found
+- View: Display reservations
+- View: Get startDate, endDate
+- Service: Add reservation and return result
+    - Display message if:
+        - Reservation overlaps
+        - Dates are in the past
+- View: Confirm the summary with admin (if result is successful)
+- View: Print add confirmation or cancellation message (depending on ^)
+
+Edit a Reservation
+- View: Get host from unique ID or printed list
+- View: Get guest from unique ID or printed list
+- Service: Find host and return reservations
+    - Display message if:
+        - No host found
+- Service: Find guest in reservations
+    - Display message if:
+        - No guest found
+- View: Display reservations and get reservation ID
+    - Order: ID#,Dates,Guest,GuestEmail
+- View: Get startDate, endDate
+- Service: Update reservation and return result
+    - Display message if:
+        - Reservation overlaps
+        - Dates are in the past
+- View: Confirm the summary with admin (if result is successful)
+- View: Print update confirmation or cancellation message (depending on ^)
+
+Cancel a Reservation
+- View: Get host from unique ID or printed list
+- View: Get guest from unique ID or printed list
+- Service: Find host and return reservations
+    - Display message if:
+        - No host found
+- Service: Find guest in reservations
+    - Display message if:
+        - No guest found
+- View: Display reservations and get reservation ID
+    - Order: ID#,Dates,Guest,GuestEmail
+- Service: Delete reservation and return result
+    - Display message if:
+        - Dates are in the past
+- View: Print delete confirmation or cancellation message (depending on ^)

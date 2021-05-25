@@ -1,0 +1,20 @@
+package learn.dontwreckmyhouse.data;
+
+import learn.dontwreckmyhouse.models.Guest;
+
+import java.io.FileNotFoundException;
+import java.util.List;
+
+public interface GuestRepository {
+
+    List<Guest> findAll() throws FileNotFoundException, DataException;
+
+    Guest findByEmail(String email) throws DataException;
+
+    Guest add(Guest guest) throws DataException;
+
+    boolean update(Guest guest) throws DataException;
+
+    boolean deleteById(int guestId) throws DataException;
+
+}

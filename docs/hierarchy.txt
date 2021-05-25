@@ -1,0 +1,51 @@
+src
+├───main
+│   ├───java
+│   │   |
+│   │   └───Admin
+│   │          │ App.java
+│   │          │
+│   │          ├───learn.dontwreckmyhouse.data
+│   │          │       DataException.java
+│   │          │       GuestFileRepository.java
+│   │          │       GuestRepository.java
+│   │          │       HostFileRepository.java
+│   │          │       HostRepository.java
+│   │          │       ReservationFileRepository.java
+│   │          │       ReservationRepository.java
+│   │          │
+│   │          ├───learn.dontwreckmyhouse.data.domain
+│   │          │       GuestService.java
+│   │          │       HostService.java
+│   │          │       ReservationService.java
+│   │          │       Response.java
+│   │          │       Result.java
+│   │          │
+│   │          ├───learn.dontwreckmyhouse.data.domain.models
+│   │          │       Guest.java
+│   │          │       Host.java
+│   │          │       Reservation.java
+│   │          │
+│   │          └───learn.dontwreckmyhouse.data.domain.models.ui
+│   │                  ConsoleIO.java
+│   │                  Controller.java
+│   │                  MainMenuOption.java
+│   │                  View.java
+│   │
+│   └───resources
+└───test
+    └───java
+        └───learn
+            └───admin
+                ├───learn.dontwreckmyhouse.data
+                │       GuestFileRepositoryTest.java
+                │       GuestRepositoryDouble.java
+                │       HostFileRepositoryTest.java
+                │       HostRepositoryDouble.java
+                │       ReservationFileRepositoryTest.java
+                │       ReservationRepositoryDouble.java
+                │
+                └───learn.dontwreckmyhouse.data.domain
+                        GuestServiceTest.java
+                        HostServiceTest.java
+			            ReservationServiceTest.java
