@@ -46,7 +46,7 @@ class GuestFileRepositoryTest {
         Guest actual = new Guest();
         actual.setFirstName("Brady");
         actual.setLastName("Blackley");
-        actual.setPhone("8016906097");
+        actual.setPhone("(801) 1234567");
         actual.setEmail("email@gmail.ccom");
         actual.setState("WI");
         assertNotNull(repository.add(actual));

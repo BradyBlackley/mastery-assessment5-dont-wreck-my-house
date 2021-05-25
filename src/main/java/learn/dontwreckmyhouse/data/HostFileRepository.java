@@ -34,22 +34,48 @@ public class HostFileRepository implements HostRepository {
     }
 
     @Override
-    public Host findByEmail(String email) {
+    public Host findByEmail(String email) throws DataException {
+        List<Host> all = findAll();
+        for (Host host : all) {
+            if (host.getEmail().equals(email)) {
+                return host;
+            }
+        }
         return null;
     }
 
     @Override
     public Host add(Host host) throws DataException {
-        return null;
+        List<Host> all = findAll();
+        host.setHostId(java.util.UUID.randomUUID().toString());
+        all.add(host);
+        writeToFile(all);
+        return host;
     }
 
     @Override
     public boolean update(Host host) throws DataException {
+        List<Host> all = findAll();
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getHostId().equals(host.getHostId())) {
+                all.set(i, host);
+                writeToFile(all);
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
-    public boolean deleteById(int hostId) throws DataException {
+    public boolean deleteById(String hostId) throws DataException {
+        List<Host> all = findAll();
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getHostId().equals(hostId)) {
+                all.remove(i);
+                writeToFile(all);
+                return true;
+            }
+        }
         return false;
     }
 

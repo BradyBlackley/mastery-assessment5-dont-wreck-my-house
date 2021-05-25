@@ -1,5 +1,6 @@
 package learn.dontwreckmyhouse.data;
 
+import learn.dontwreckmyhouse.models.Guest;
 import learn.dontwreckmyhouse.models.Host;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,46 @@ class HostFileRepositoryTest {
         List<Host> actual = repository.findAll();
         assertNotNull(actual);
         assertEquals(5, actual.size());
+    }
+
+    @Test
+    void findByEmail() throws DataException {
+        Host actual = repository.findByEmail("nonExistentEmail@gmail.com");
+        assertNull(actual);
+        actual = repository.findByEmail("eyearnes0@sfgate.com");
+        assertEquals("Yearnes", actual.getLastName());
+    }
+
+    @Test
+    void add() throws DataException {
+        Host actual = new Host();
+        actual.setLastName("Blackley");
+        actual.setEmail("email@gmail.com");
+        actual.setPhone("(801) 1234567");
+        actual.setAddress("123 Main St");
+        actual.setCity("Test");
+        actual.setState("AZ");
+        actual.setPostalCode("12345");
+        actual.setStandardRate(433);
+        actual.setWeekendRate(541.25);
+        assertNotNull(repository.add(actual));
+        List<Host> all = repository.findAll();
+        assertEquals(6, all.size());
+    }
+
+    @Test
+    void update() throws DataException {
+        Host host = repository.findByEmail("eyearnes0@sfgate.com");
+        host.setLastName("NoLongerRhodes");
+        assertTrue(repository.update(host));
+        assertEquals("NoLongerRhodes", repository.findByEmail("eyearnes0@sfgate.com").getLastName());
+    }
+
+    @Test
+    void delete() throws DataException {
+        String hostId = repository.findByEmail("eyearnes0@sfgate.com").getHostId();
+        assertTrue(repository.deleteById(hostId));
+        assertEquals(4, repository.findAll().size());
     }
 
 }
