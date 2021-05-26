@@ -77,11 +77,11 @@ public class ReservationFileRepository implements ReservationRepository {
     }
 
     private String serialize(Reservation reservation) {
-        return String.format("%s%s%s%s%s",
+        return String.format("%s,%s,%s,%s,%s",
                 reservation.getReservationId(),
                 reservation.getStartDate(),
                 reservation.getEndDate(),
-                reservation.getGuest(),
+                reservation.getGuest().getGuestId(),
                 reservation.getTotal());
     }
 

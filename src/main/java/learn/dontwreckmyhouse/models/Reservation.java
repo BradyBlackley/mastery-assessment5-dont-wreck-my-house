@@ -13,6 +13,15 @@ public class Reservation {
     private Host host;
     private BigDecimal total;
 
+    public Reservation() {
+
+    }
+
+    public Reservation(Guest guest, Host host) {
+        this.guest = guest;
+        this.host = host;
+    }
+
     public int getReservationId() {
         return reservationId;
     }
@@ -87,8 +96,6 @@ public class Reservation {
 
         return weekDayTotal.add(weekEndTotal);
     }
-
-    //TODO: include calculate total helper method
 
     //TODO: include boolean to check if there is overlap in start date
 }
