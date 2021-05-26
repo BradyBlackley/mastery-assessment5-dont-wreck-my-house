@@ -35,6 +35,17 @@ public class HostFileRepository implements HostRepository {
     }
 
     @Override
+    public Host findById(String id) throws DataException {
+        List<Host> all = findAll();
+        for (Host host : all) {
+            if (host.getHostId().equals(id)) {
+                return host;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Host findByEmail(String email) throws DataException {
         List<Host> all = findAll();
         for (Host host : all) {

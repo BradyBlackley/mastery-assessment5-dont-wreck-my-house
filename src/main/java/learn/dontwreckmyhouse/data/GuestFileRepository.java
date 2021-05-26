@@ -33,6 +33,17 @@ public class GuestFileRepository implements GuestRepository {
     }
 
     @Override
+    public Guest findById(int id) throws DataException {
+        List<Guest> all = findAll();
+        for (Guest guest : all) {
+            if (guest.getGuestId() == id) {
+                return guest;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Guest findByEmail(String email) throws DataException {
         List<Guest> all = findAll();
         for (Guest guest : all) {

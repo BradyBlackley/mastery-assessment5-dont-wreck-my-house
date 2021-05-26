@@ -37,10 +37,27 @@ class HostFileRepositoryTest {
     }
 
     @Test
-    void findByEmail() throws DataException {
+    void shouldNotFindByMissingEmail() throws DataException {
         Host actual = repository.findByEmail("nonExistentEmail@gmail.com");
         assertNull(actual);
-        actual = repository.findByEmail("eyearnes0@sfgate.com");
+    }
+
+    @Test
+    void shouldFindByFoundEmail() throws DataException {
+        Host actual = repository.findByEmail("eyearnes0@sfgate.com");
+        assertEquals("Yearnes", actual.getLastName());
+    }
+
+    @Test
+    void shouldNotfindByMissingId() throws DataException {
+        Host actual = repository.findById("12341234123412341234");
+        assertNull(actual);
+    }
+
+    @Test
+    void shouldFindByFoundId() throws DataException {
+        Host actual = repository.findById("3edda6bc-ab95-49a8-8962-d50b53f84b15");
+        assertNotNull(actual);
         assertEquals("Yearnes", actual.getLastName());
     }
 

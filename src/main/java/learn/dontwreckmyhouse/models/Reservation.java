@@ -8,7 +8,8 @@ public class Reservation {
     private int reservationId;
     private LocalDate startDate;
     private LocalDate endDate;
-    private int guestId;
+    private Guest guest;
+    private Host host;
     private BigDecimal total;
 
     public int getReservationId() {
@@ -35,12 +36,20 @@ public class Reservation {
         this.endDate = endDate;
     }
 
-    public int getGuestId() {
-        return guestId;
+    public Guest getGuest() {
+        return guest;
     }
 
-    public void setGuestId(int guestId) {
-        this.guestId = guestId;
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
+    public Host getHost() {
+        return host;
+    }
+
+    public void setHost(Host host) {
+        this.host = host;
     }
 
     public BigDecimal getTotal() {
@@ -50,4 +59,8 @@ public class Reservation {
     public void setTotal(BigDecimal total) {
         this.total = total;
     }
+
+    //TODO: include calculate total helper method
+
+    //TODO: include boolean to check if there is overlap in start date
 }

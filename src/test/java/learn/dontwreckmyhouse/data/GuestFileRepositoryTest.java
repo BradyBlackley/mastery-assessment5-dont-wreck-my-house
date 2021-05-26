@@ -34,10 +34,28 @@ class GuestFileRepositoryTest {
     }
 
     @Test
-    void findByEmail() throws DataException {
+    void shouldNotFindMissingByEmail() throws DataException {
         Guest actual = repository.findByEmail("nonExistentEmail@gmail.com");
         assertNull(actual);
-        actual = repository.findByEmail("slomas0@mediafire.com");
+    }
+
+    @Test
+    void shouldFindByFoundEmail() throws DataException {
+        Guest actual = repository.findByEmail("slomas0@mediafire.com");
+        assertNotNull(actual);
+        assertEquals("Sullivan", actual.getFirstName());
+    }
+
+    @Test
+    void shouldNotFindByMissingId() throws DataException {
+        Guest actual = repository.findById(500);
+        assertNull(actual);
+    }
+
+    @Test
+    void shouldFindByFoundId() throws DataException {
+        Guest actual = repository.findById(1);
+        assertNotNull(actual);
         assertEquals("Sullivan", actual.getFirstName());
     }
 

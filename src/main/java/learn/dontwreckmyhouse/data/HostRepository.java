@@ -8,6 +8,8 @@ public interface HostRepository {
 
     List<Host> findAll() throws DataException;
 
+    Host findById(String id) throws DataException;
+
     Host findByEmail(String email) throws DataException;
 
     Host add(Host host) throws DataException;

@@ -2,9 +2,7 @@ package learn.dontwreckmyhouse.data;
 
 import learn.dontwreckmyhouse.models.Reservation;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -15,9 +13,15 @@ public class ReservationFileRepository implements ReservationRepository {
 
     private static final String HEADER = "id,start_date,end_date,guest_id,total";
     private final String directory;
+    private final GuestFileRepository guestRepository;
+    private final HostFileRepository hostRepository;
 
-    public ReservationFileRepository(String directory) {
+    public ReservationFileRepository(String directory,
+                                     GuestFileRepository guestRepository,
+                                     HostFileRepository hostRepository) {
         this.directory = directory;
+        this.guestRepository = guestRepository;
+        this.hostRepository = hostRepository;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class ReservationFileRepository implements ReservationRepository {
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 String[] fields = line.split(",", -1);
                 if (fields.length == 5) {
-                    reservations.add(deserialize(fields));
+                    reservations.add(deserialize(fields, hostId));
                 }
             }
         } catch (IOException ex) {
@@ -39,7 +43,12 @@ public class ReservationFileRepository implements ReservationRepository {
 
     @Override
     public Reservation add(Reservation reservation) throws DataException {
-        return null;
+        List<Reservation> all =
+                findReservationsByHostId(reservation.getHost().getHostId());
+        reservation.setReservationId(getNextId(all));
+        all.add(reservation);
+        writeToFile(all, reservation.getHost().getHostId());
+        return reservation;
     }
 
     @Override
@@ -71,16 +80,28 @@ public class ReservationFileRepository implements ReservationRepository {
                 reservation.getReservationId(),
                 reservation.getStartDate(),
                 reservation.getEndDate(),
-                reservation.getGuestId(),
+                reservation.getGuest(),
                 reservation.getTotal());
     }
 
-    private Reservation deserialize(String[] fields) {
+    private void writeToFile(List<Reservation> reservations, String hostId) throws DataException {
+        try (PrintWriter writer = new PrintWriter(getFilePath(hostId))) {
+            writer.println(HEADER);
+            for (Reservation reservation : reservations) {
+                writer.println(serialize(reservation));
+            }
+        } catch (FileNotFoundException ex) {
+            throw new DataException(ex);
+        }
+    }
+
+    private Reservation deserialize(String[] fields, String hostId) throws DataException {
         Reservation reservation = new Reservation();
         reservation.setReservationId(Integer.parseInt(fields[0]));
         reservation.setStartDate(LocalDate.parse(fields[1]));
         reservation.setEndDate(LocalDate.parse(fields[2]));
-        reservation.setGuestId(Integer.parseInt(fields[3]));
+        reservation.setGuest(guestRepository.findById(Integer.parseInt(fields[3])));
+        reservation.setHost(hostRepository.findById(hostId));
         reservation.setTotal(BigDecimal.valueOf(Long.parseLong(fields[4])));
         return reservation;
     }
