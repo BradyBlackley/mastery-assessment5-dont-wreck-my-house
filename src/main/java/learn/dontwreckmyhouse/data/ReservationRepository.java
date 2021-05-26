@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ReservationRepository {
 
-    List<Reservation> findByHostId(String hostId) throws DataException, FileNotFoundException;
+    List<Reservation> findReservationsByHostId(String hostId) throws DataException, FileNotFoundException;
 
     Reservation add(Reservation reservation) throws DataException;
 

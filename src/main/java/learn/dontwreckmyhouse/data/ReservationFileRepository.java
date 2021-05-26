@@ -3,7 +3,6 @@ package learn.dontwreckmyhouse.data;
 import learn.dontwreckmyhouse.models.Reservation;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -22,21 +21,20 @@ public class ReservationFileRepository implements ReservationRepository {
     }
 
     @Override
-    public List<Reservation> findByHostId(String hostId) throws DataException {
+    public List<Reservation> findReservationsByHostId(String hostId) throws DataException {
         ArrayList<Reservation> reservations = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(getFilePath(hostId)))) {
             reader.readLine(); //read header
             for (String line = reader.readLine(); line != null; line = reader.readLine()) {
                 String[] fields = line.split(",", -1);
-                if (fields.length == 4) {
+                if (fields.length == 5) {
                     reservations.add(deserialize(fields));
-                    return reservations;
                 }
             }
         } catch (IOException ex) {
             //don't throw on read
         }
-        return null;
+        return reservations;
     }
 
     @Override
