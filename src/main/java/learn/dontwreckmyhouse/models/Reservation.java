@@ -1,6 +1,7 @@
 package learn.dontwreckmyhouse.models;
 
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class Reservation {
@@ -58,6 +59,33 @@ public class Reservation {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public void updateTotal() {
+        this.setTotal(this.calculateTotal());
+    }
+
+    private BigDecimal calculateTotal() {
+        LocalDate temp = startDate;
+        boolean done = false;
+        BigDecimal weekDays = BigDecimal.valueOf(0);
+        BigDecimal weekEndDays = BigDecimal.valueOf(0);
+
+        while (!done) {
+            if (temp.isEqual(endDate)) {
+                done = true;
+            } else if (temp.getDayOfWeek() == DayOfWeek.SATURDAY || temp.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                weekEndDays = weekEndDays.add(BigDecimal.valueOf(1));
+            } else {
+                weekDays = weekDays.add(BigDecimal.valueOf(1));
+            }
+            temp = temp.plusDays(1);
+        }
+
+        BigDecimal weekDayTotal = new BigDecimal(String.valueOf(weekDays.multiply(host.getStandardRate())));
+        BigDecimal weekEndTotal = new BigDecimal(String.valueOf(weekEndDays.multiply(host.getWeekendRate())));
+
+        return weekDayTotal.add(weekEndTotal);
     }
 
     //TODO: include calculate total helper method

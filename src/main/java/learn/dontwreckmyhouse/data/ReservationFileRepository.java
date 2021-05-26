@@ -4,6 +4,7 @@ import learn.dontwreckmyhouse.models.Reservation;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -102,7 +103,7 @@ public class ReservationFileRepository implements ReservationRepository {
         reservation.setEndDate(LocalDate.parse(fields[2]));
         reservation.setGuest(guestRepository.findById(Integer.parseInt(fields[3])));
         reservation.setHost(hostRepository.findById(hostId));
-        reservation.setTotal(BigDecimal.valueOf(Long.parseLong(fields[4])));
+        reservation.setTotal(new BigDecimal(fields[4]).setScale(2, RoundingMode.HALF_EVEN));
         return reservation;
     }
 }

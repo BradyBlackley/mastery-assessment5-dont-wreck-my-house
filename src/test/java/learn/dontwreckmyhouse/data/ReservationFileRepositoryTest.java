@@ -54,4 +54,9 @@ class ReservationFileRepositoryTest {
         //reservation.setTotal()
     }
 
+    @Test
+    void update() throws DataException {
+        Reservation reservation = new Reservation();
+    }
+
 }
