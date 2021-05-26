@@ -3,6 +3,7 @@ package learn.dontwreckmyhouse.data;
 import learn.dontwreckmyhouse.models.Host;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,8 +115,8 @@ public class HostFileRepository implements HostRepository {
         result.setCity(fields[5]);
         result.setState(fields[6]);
         result.setPostalCode(fields[7]);
-        result.setStandardRate(Double.parseDouble(fields[8]));
-        result.setWeekendRate(Double.parseDouble(fields[9]));
+        result.setStandardRate(BigDecimal.valueOf(Double.parseDouble(fields[8])));
+        result.setWeekendRate(BigDecimal.valueOf(Double.parseDouble(fields[9])));
         return result;
     }
 }

@@ -1,5 +1,7 @@
 package learn.dontwreckmyhouse.models;
 
+import java.math.BigDecimal;
+
 public class Host {
 
     private String hostId;
@@ -10,8 +12,8 @@ public class Host {
     private String city;
     private String state;
     private String postalCode;
-    private double standardRate;
-    private double weekendRate;
+    private BigDecimal standardRate;
+    private BigDecimal weekendRate;
 
     public String getHostId() {
         return hostId;
@@ -77,19 +79,19 @@ public class Host {
         this.postalCode = postalCode;
     }
 
-    public double getStandardRate() {
+    public BigDecimal getStandardRate() {
         return standardRate;
     }
 
-    public void setStandardRate(double standardRate) {
+    public void setStandardRate(BigDecimal standardRate) {
         this.standardRate = standardRate;
     }
 
-    public double getWeekendRate() {
+    public BigDecimal getWeekendRate() {
         return weekendRate;
     }
 
-    public void setWeekendRate(double weekendRate) {
+    public void setWeekendRate(BigDecimal weekendRate) {
         this.weekendRate = weekendRate;
     }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,8 +54,8 @@ class HostFileRepositoryTest {
         actual.setCity("Test");
         actual.setState("AZ");
         actual.setPostalCode("12345");
-        actual.setStandardRate(433);
-        actual.setWeekendRate(541.25);
+        actual.setStandardRate(BigDecimal.valueOf(433));
+        actual.setWeekendRate(BigDecimal.valueOf(541.25));
         assertNotNull(repository.add(actual));
         List<Host> all = repository.findAll();
         assertEquals(6, all.size());

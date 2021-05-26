@@ -1,5 +1,6 @@
 package learn.dontwreckmyhouse.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Reservation {
@@ -8,7 +9,7 @@ public class Reservation {
     private LocalDate startDate;
     private LocalDate endDate;
     private int guestId;
-    private int total;
+    private BigDecimal total;
 
     public int getReservationId() {
         return reservationId;
@@ -42,11 +43,11 @@ public class Reservation {
         this.guestId = guestId;
     }
 
-    public int getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(int total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 }
