@@ -30,7 +30,7 @@ class GuestFileRepositoryTest {
     @Test
     void findAll() throws DataException {
         List<Guest> actual = repository.findAll();
-        assertEquals(5,actual.size());
+        assertEquals(1000,actual.size());
     }
 
     @Test
@@ -48,7 +48,7 @@ class GuestFileRepositoryTest {
 
     @Test
     void shouldNotFindByMissingId() throws DataException {
-        Guest actual = repository.findById(500);
+        Guest actual = repository.findById(1234123412);
         assertNull(actual);
     }
 
@@ -69,7 +69,7 @@ class GuestFileRepositoryTest {
         actual.setState("WI");
         assertNotNull(repository.add(actual));
         List<Guest> all = repository.findAll();
-        assertEquals(6, all.size());
+        assertEquals(1001, all.size());
     }
 
     @Test
@@ -84,6 +84,6 @@ class GuestFileRepositoryTest {
     void delete() throws DataException {
         int guestId = repository.findByEmail("lgueny3@example.com").getGuestId();
         assertTrue(repository.deleteById(guestId));
-        assertEquals(4, repository.findAll().size());
+        assertEquals(999, repository.findAll().size());
     }
 }

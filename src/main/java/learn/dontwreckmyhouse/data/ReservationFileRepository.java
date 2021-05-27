@@ -42,6 +42,16 @@ public class ReservationFileRepository implements ReservationRepository {
         return reservations;
     }
 
+    public Reservation findReservation(String hostId, int reservationId) throws DataException {
+        List<Reservation> reservations = findReservationsByHostId(hostId);
+        for (Reservation reservation : reservations) {
+            if(reservation.getReservationId() == reservationId) {
+                return reservation;
+            }
+        }
+        return null;
+    }
+
     @Override
     public Reservation add(Reservation reservation) throws DataException {
         List<Reservation> all =
@@ -54,11 +64,20 @@ public class ReservationFileRepository implements ReservationRepository {
 
     @Override
     public boolean update(Reservation reservation) throws DataException {
+        List<Reservation> all = findReservationsByHostId(reservation.getHost().getHostId());
+        for (int i = 0; i < all.size(); i++){
+            if(all.get(i).getReservationId() == reservation.getReservationId()) {
+                all.set(i, reservation);
+                writeToFile(all, reservation.getHost().getHostId());
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
     public boolean deleteById(int reservationId) throws DataException {
+
         return false;
     }
 
@@ -85,17 +104,6 @@ public class ReservationFileRepository implements ReservationRepository {
                 reservation.getTotal());
     }
 
-    private void writeToFile(List<Reservation> reservations, String hostId) throws DataException {
-        try (PrintWriter writer = new PrintWriter(getFilePath(hostId))) {
-            writer.println(HEADER);
-            for (Reservation reservation : reservations) {
-                writer.println(serialize(reservation));
-            }
-        } catch (FileNotFoundException ex) {
-            throw new DataException(ex);
-        }
-    }
-
     private Reservation deserialize(String[] fields, String hostId) throws DataException {
         Reservation reservation = new Reservation();
         reservation.setReservationId(Integer.parseInt(fields[0]));
@@ -105,5 +113,16 @@ public class ReservationFileRepository implements ReservationRepository {
         reservation.setHost(hostRepository.findById(hostId));
         reservation.setTotal(new BigDecimal(fields[4]).setScale(2, RoundingMode.HALF_EVEN));
         return reservation;
+    }
+
+    private void writeToFile(List<Reservation> reservations, String hostId) throws DataException {
+        try (PrintWriter writer = new PrintWriter(getFilePath(hostId))) {
+            writer.println(HEADER);
+            for (Reservation reservation : reservations) {
+                writer.println(serialize(reservation));
+            }
+        } catch (FileNotFoundException ex) {
+            throw new DataException(ex);
+        }
     }
 }

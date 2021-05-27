@@ -33,7 +33,7 @@ class HostFileRepositoryTest {
     void findAll() throws DataException {
         List<Host> actual = repository.findAll();
         assertNotNull(actual);
-        assertEquals(5, actual.size());
+        assertEquals(1000, actual.size());
     }
 
     @Test
@@ -75,7 +75,7 @@ class HostFileRepositoryTest {
         actual.setWeekendRate(BigDecimal.valueOf(541.25));
         assertNotNull(repository.add(actual));
         List<Host> all = repository.findAll();
-        assertEquals(6, all.size());
+        assertEquals(1001, all.size());
     }
 
     @Test
@@ -90,7 +90,7 @@ class HostFileRepositoryTest {
     void delete() throws DataException {
         String hostId = repository.findByEmail("eyearnes0@sfgate.com").getHostId();
         assertTrue(repository.deleteById(hostId));
-        assertEquals(4, repository.findAll().size());
+        assertEquals(999, repository.findAll().size());
     }
 
 }

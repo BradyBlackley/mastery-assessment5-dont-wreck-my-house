@@ -49,20 +49,33 @@ class ReservationFileRepositoryTest {
     }
 
     @Test
+    void findReservation() throws DataException {
+        Reservation actual =
+                repository.findReservation("2e72f86c-b8fe-4265-b4f1-304dea8762db", 1);
+        assertNotNull(actual);
+        assertEquals(LocalDate.of(2021,10,14), actual.getEndDate());
+    }
+
+    @Test
     void add() throws DataException {
         Guest guest = guestRepository.findById(1);
-        Host host = hostRepository.findById("3edda6bc-ab95-49a8-8962-d50b53f84b15");
+        Host host = hostRepository.findById("2e72f86c-b8fe-4265-b4f1-304dea8762db");
         Reservation reservation = new Reservation(guest, host);
         reservation.setStartDate(LocalDate.of(2020, 1, 1));
         reservation.setEndDate(LocalDate.of(2020, 1, 5));
         reservation.updateTotal();
         assertNotNull(repository.add(reservation));
-        assertEquals(1, repository.findReservationsByHostId("3edda6bc-ab95-49a8-8962-d50b53f84b15").size());
+        assertEquals(13, repository.findReservationsByHostId("2e72f86c-b8fe-4265-b4f1-304dea8762db").size());
     }
 
     @Test
     void update() throws DataException {
-        //Reservation reservation = new Reservation();
+        Reservation reservation =
+                repository.findReservation("2e72f86c-b8fe-4265-b4f1-304dea8762db", 1);
+        reservation.setEndDate(LocalDate.of(2021,10,15));
+
+        assertTrue(repository.update(reservation));
+
     }
 
 }
