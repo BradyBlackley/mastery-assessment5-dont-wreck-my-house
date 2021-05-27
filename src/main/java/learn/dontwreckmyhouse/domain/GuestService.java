@@ -18,6 +18,14 @@ public class GuestService {
         return repository.findAll();
     }
 
+    public Guest findById(int guestId) throws DataException {
+        return repository.findById(guestId);
+    }
+
+    public Guest findByEmail(String email) throws DataException {
+        return repository.findByEmail(email);
+    }
+
     public Result<Guest> add(Guest guest) throws DataException {
         Result<Guest> result = validate(guest);
         if (repository.findAll().stream()

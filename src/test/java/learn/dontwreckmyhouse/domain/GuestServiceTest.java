@@ -25,6 +25,18 @@ class GuestServiceTest {
     }
 
     @Test
+    void shouldFindById() throws DataException {
+        assertNotNull(service.findById(1));
+        assertEquals("Chester", service.findById(1).getFirstName());
+    }
+
+    @Test
+    void shouldFindByEmail() throws DataException {
+        assertNotNull(service.findByEmail("fakeemail@gmail.com"));
+        assertEquals("Chester", service.findByEmail("fakeemail@gmail.com").getFirstName());
+    }
+
+    @Test
     void shouldAddValidGuest() throws DataException {
         Guest guest = new Guest(2, "Test", "Test",
                 "testingemail@gmail.com", "(801) 1234567", "WI");
