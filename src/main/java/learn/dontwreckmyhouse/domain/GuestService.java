@@ -20,10 +20,41 @@ public class GuestService {
 
     public Result<Guest> add(Guest guest) throws DataException {
         Result<Guest> result = validate(guest);
+        if (repository.findAll().stream()
+                .anyMatch(g -> g.getEmail().equals(guest.getEmail()))) {
+            result.addErrorMessage("The given guest already exists.");
+        }
         if (!result.isSuccess()) {
             return result;
         }
         result.setPayload(repository.add(guest));
+        return result;
+    }
+
+    public Result<Guest> update(Guest guest) throws DataException {
+        Result<Guest> result = validate(guest);
+
+        if (guest.getGuestId() <= 0) {
+            result.addErrorMessage("Guest `id` is required.");
+        }
+
+        if (result.isSuccess()) {
+            if (repository.update(guest)) {
+                result.setPayload(guest);
+            } else {
+                String message = String.format("Guest id %s was not found.", guest.getGuestId());
+                result.addErrorMessage(message);
+            }
+        }
+        return result;
+    }
+
+    public Result<Guest> deleteById(int guestId) throws DataException {
+        Result<Guest> result = new Result<>();
+        if (!repository.deleteById(guestId)) {
+            String message = String.format("Guest id %s was not found.", guestId);
+            result.addErrorMessage(message);
+        }
         return result;
     }
 
@@ -56,7 +87,7 @@ public class GuestService {
             return result;
         }
 
-        if(guest.getPhone().length() != 13
+        if (guest.getPhone().length() != 13
                 && guest.getPhone().charAt(0) != '('
                 && guest.getPhone().charAt(4) != ')'
                 && guest.getPhone().charAt(5) != ' ') {
@@ -72,11 +103,6 @@ public class GuestService {
         if (guest.getState().length() != 2) {
             result.addErrorMessage("Guest state format is incorrect. The format should be the two letter abbreviation.");
             return result;
-        }
-
-        if (repository.findAll().stream()
-                .anyMatch(g -> g.getEmail().equals(guest.getEmail()))) {
-            result.addErrorMessage("The given guest already exists.");
         }
         return result;
     }

@@ -120,4 +120,28 @@ class GuestServiceTest {
         assertFalse(service.add(guest).isSuccess());
     }
 
+    @Test
+    void shouldUpdateFoundGuest() throws DataException {
+        Guest guest = new Guest(1, "Chester", "Cheetah",
+                "fakeemail@gmail.com", "(801) 1234567", "WI");
+        assertTrue(service.update(guest).isSuccess());
+    }
+
+    @Test
+    void shouldNotUpdateMissingGuest() throws DataException {
+        Guest guest = new Guest(1000, "Doesnt", "Exist",
+                "fakeemail@gmail.com", "(801) 1234567", "WI");
+        assertFalse(service.update(guest).isSuccess());
+    }
+
+    @Test
+    void shouldDeleteFoundGuest() throws DataException {
+        assertTrue(service.deleteById(1).isSuccess());
+    }
+
+    @Test
+    void shouldNotDeleteMissingGuest() throws DataException {
+        assertFalse(service.deleteById(11234).isSuccess());
+    }
+
 }
