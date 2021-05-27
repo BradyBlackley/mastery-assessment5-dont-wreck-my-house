@@ -42,10 +42,11 @@ public class ReservationFileRepository implements ReservationRepository {
         return reservations;
     }
 
+    @Override
     public Reservation findReservation(String hostId, int reservationId) throws DataException {
         List<Reservation> reservations = findReservationsByHostId(hostId);
         for (Reservation reservation : reservations) {
-            if(reservation.getReservationId() == reservationId) {
+            if (reservation.getReservationId() == reservationId) {
                 return reservation;
             }
         }
@@ -65,8 +66,8 @@ public class ReservationFileRepository implements ReservationRepository {
     @Override
     public boolean update(Reservation reservation) throws DataException {
         List<Reservation> all = findReservationsByHostId(reservation.getHost().getHostId());
-        for (int i = 0; i < all.size(); i++){
-            if(all.get(i).getReservationId() == reservation.getReservationId()) {
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getReservationId() == reservation.getReservationId()) {
                 all.set(i, reservation);
                 writeToFile(all, reservation.getHost().getHostId());
                 return true;
@@ -76,8 +77,15 @@ public class ReservationFileRepository implements ReservationRepository {
     }
 
     @Override
-    public boolean deleteById(int reservationId) throws DataException {
-
+    public boolean deleteById(String hostId, int reservationId) throws DataException {
+        List<Reservation> all = findReservationsByHostId(hostId);
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getReservationId() == reservationId) {
+                all.remove(i);
+                writeToFile(all, hostId);
+                return true;
+            }
+        }
         return false;
     }
 

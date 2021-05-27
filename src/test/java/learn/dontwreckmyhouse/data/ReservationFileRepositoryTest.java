@@ -75,7 +75,12 @@ class ReservationFileRepositoryTest {
         reservation.setEndDate(LocalDate.of(2021,10,15));
 
         assertTrue(repository.update(reservation));
+    }
 
+    @Test
+    void delete() throws DataException {
+        assertTrue(repository.deleteById("2e72f86c-b8fe-4265-b4f1-304dea8762db", 12));
+        assertEquals(11, repository.findReservationsByHostId("2e72f86c-b8fe-4265-b4f1-304dea8762db").size());
     }
 
 }
