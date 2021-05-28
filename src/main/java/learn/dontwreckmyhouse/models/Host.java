@@ -16,7 +16,8 @@ public class Host {
     private BigDecimal weekendRate;
 
     public Host() {
-
+        this.standardRate = BigDecimal.ZERO;
+        this.weekendRate = BigDecimal.ZERO;
     }
 
     public Host( String lastName, String email,

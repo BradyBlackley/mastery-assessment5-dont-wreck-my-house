@@ -9,12 +9,12 @@ public interface ReservationRepository {
 
     List<Reservation> findReservationsByHostId(String hostId) throws DataException, FileNotFoundException;
 
-    Reservation findReservation(String hostId, int reservationId) throws DataException;
+    Reservation findReservation(String hostId, int reservationId) throws DataException, FileNotFoundException;
 
-    Reservation add(Reservation reservation) throws DataException;
+    Reservation add(Reservation reservation) throws DataException, FileNotFoundException;
 
-    boolean update(Reservation reservation) throws DataException;
+    boolean update(Reservation reservation) throws DataException, FileNotFoundException;
 
-    boolean deleteById(String hostId, int reservationId) throws DataException;
+    boolean deleteById(String hostId, int reservationId) throws DataException, FileNotFoundException;
 
 }

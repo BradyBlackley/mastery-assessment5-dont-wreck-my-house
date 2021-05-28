@@ -22,6 +22,14 @@ public class Reservation {
         this.host = host;
     }
 
+    public Reservation(int reservationId, LocalDate startDate, LocalDate endDate, Guest guest, Host host) {
+        this.reservationId = reservationId;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.guest = guest;
+        this.host = host;
+    }
+
     public int getReservationId() {
         return reservationId;
     }
