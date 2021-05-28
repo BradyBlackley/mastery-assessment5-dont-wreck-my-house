@@ -96,9 +96,9 @@ public class GuestService {
         }
 
         if (guest.getPhone().length() != 13
-                && guest.getPhone().charAt(0) != '('
-                && guest.getPhone().charAt(4) != ')'
-                && guest.getPhone().charAt(5) != ' ') {
+                || guest.getPhone().charAt(0) != '('
+                || guest.getPhone().charAt(4) != ')'
+                || guest.getPhone().charAt(5) != ' ') {
             result.addErrorMessage("Guest phone format is incorrect. The format should be (###) #######");
             return result;
         }
