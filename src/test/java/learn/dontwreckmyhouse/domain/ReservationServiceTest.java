@@ -104,6 +104,18 @@ public class ReservationServiceTest {
     }
 
     @Test
+    void shouldNotAddStartDateThatIsAfterEndDate() throws DataException, FileNotFoundException {
+        Reservation reservation = new Reservation();
+        reservation.setStartDate(LocalDate.now().plusDays(1));
+        reservation.setEndDate(LocalDate.now());
+        reservation.setGuest(ReservationRepositoryDouble.GUEST);
+        reservation.setHost(ReservationRepositoryDouble.HOST);
+        reservation.updateTotal();
+        Result<Reservation> result = service.add(reservation);
+        assertFalse(result.isSuccess());
+    }
+
+    @Test
     void shouldNotAddConflictingReservationDate2() throws DataException, FileNotFoundException {
         Reservation reservation = new Reservation();
         reservation.setStartDate(LocalDate.now().plusDays(2));
@@ -125,5 +137,11 @@ public class ReservationServiceTest {
         reservation.updateTotal();
         Result<Reservation> result = service.add(reservation);
         assertFalse(result.isSuccess());
+    }
+
+    @Test
+    void shouldDeleteFound() throws DataException, FileNotFoundException {
+        Result<Reservation> result = service.deleteById("3edda6bc-ab95-49a8-8962-d50b53f84b15", 1);
+        assertTrue(result.isSuccess());
     }
 }

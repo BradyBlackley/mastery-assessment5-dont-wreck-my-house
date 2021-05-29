@@ -66,6 +66,6 @@ public class ReservationRepositoryDouble implements ReservationRepository {
 
     @Override
     public boolean deleteById(String hostId, int reservationId) throws DataException, FileNotFoundException {
-        return findReservation(hostId, reservationId) != null;
+        return findReservation(hostId, reservationId) == null;
     }
 }

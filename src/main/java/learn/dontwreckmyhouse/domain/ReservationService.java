@@ -42,7 +42,15 @@ public class ReservationService {
     }
 
     public Result<Reservation> update(Reservation reservation) throws DataException, FileNotFoundException {
-        Result<Reservation> result = validate(reservation);
+
+        Result<Reservation> result;
+        result = deleteById(reservation.getHost().getHostId(), reservation.getReservationId());
+        if (result.isSuccess()) {
+            String message = String.format("Reservation id %s was not found.", reservation.getReservationId());
+            result.addErrorMessage(message);
+        }
+
+        result = validate(reservation);
         if (reservation.getReservationId() <= 0) {
             result.addErrorMessage("Reservation `id` is required.");
         }

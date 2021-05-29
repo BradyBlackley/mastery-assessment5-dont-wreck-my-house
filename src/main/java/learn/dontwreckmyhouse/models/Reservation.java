@@ -28,6 +28,7 @@ public class Reservation {
         this.endDate = endDate;
         this.guest = guest;
         this.host = host;
+        updateTotal();
     }
 
     public int getReservationId() {
@@ -87,23 +88,27 @@ public class Reservation {
         boolean done = false;
         BigDecimal weekDays = BigDecimal.valueOf(0);
         BigDecimal weekEndDays = BigDecimal.valueOf(0);
+        BigDecimal weekDayTotal;
+        BigDecimal weekEndTotal;
 
-        while (!done) {
-            if (temp.isEqual(endDate)) {
-                done = true;
-            } else if (temp.getDayOfWeek() == DayOfWeek.SATURDAY || temp.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                weekEndDays = weekEndDays.add(BigDecimal.valueOf(1));
-            } else {
-                weekDays = weekDays.add(BigDecimal.valueOf(1));
+        if(startDate.isAfter(endDate)){
+            weekDayTotal = BigDecimal.ZERO;
+            weekEndTotal = BigDecimal.ZERO;
+        }else {
+            while (!done) {
+                if (temp.isEqual(endDate)) {
+                    done = true;
+                } else if (temp.getDayOfWeek() == DayOfWeek.SATURDAY || temp.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                    weekEndDays = weekEndDays.add(BigDecimal.valueOf(1));
+                } else {
+                    weekDays = weekDays.add(BigDecimal.valueOf(1));
+                }
+                temp = temp.plusDays(1);
             }
-            temp = temp.plusDays(1);
+
+            weekDayTotal = new BigDecimal(String.valueOf(weekDays.multiply(host.getStandardRate())));
+            weekEndTotal = new BigDecimal(String.valueOf(weekEndDays.multiply(host.getWeekendRate())));
         }
-
-        BigDecimal weekDayTotal = new BigDecimal(String.valueOf(weekDays.multiply(host.getStandardRate())));
-        BigDecimal weekEndTotal = new BigDecimal(String.valueOf(weekEndDays.multiply(host.getWeekendRate())));
-
         return weekDayTotal.add(weekEndTotal);
     }
-
-    //TODO: include boolean to check if there is overlap in start date
 }
