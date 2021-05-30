@@ -11,7 +11,7 @@ public enum MainMenuOption {
     private int value;
     private String message;
 
-    private MainMenuOption(int value, String message) {
+    MainMenuOption(int value, String message) {
         this.value = value;
         this.message = message;
     }
