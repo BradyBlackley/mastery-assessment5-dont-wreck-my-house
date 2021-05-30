@@ -73,11 +73,16 @@ public class Controller {
     private void makeAReservation() throws DataException, FileNotFoundException {
         view.displayHeader(MainMenuOption.MAKE_A_RESERVATION.getMessage());
         Guest guest = selectGuest();
-        Host host = selectHost();
-        List<Reservation> reservations = null;
-        if (host != null) {
-            reservations = reservationService.findReservationsByHostId(host.getHostId());
+        if (guest == null) {
+            return;
         }
+        Host host = selectHost();
+        if (host == null) {
+            return;
+        }
+        List<Reservation> reservations = null;
+        reservations = reservationService.findReservationsByHostId(host.getHostId());
+
         view.displayReservations(reservations, host);
         Reservation reservation = view.makeReservation(host, guest);
         view.displayReservationSummary(reservation);
@@ -120,7 +125,9 @@ public class Controller {
                 guest = view.chooseGuest(guestService.findByLastName(view.getGuestLastNamePrefix()));
                 break;
         }
-        view.displayMessage("Guest selected:");
+        if (guest != null) {
+            view.displayMessage("Guest selected:");
+        }
         view.displayGuest(guest);
         view.enterToContinue();
         return guest;
