@@ -122,6 +122,10 @@ public class View {
         return guests.get(index - 1);
     }
 
+    public boolean isOkay(){
+        return io.readBoolean("Is this okay? [y/n]: ");
+    }
+
     public String getGuestLastNamePrefix() {
         return io.readRequiredString("Guest last name starts with: ");
     }
@@ -215,6 +219,15 @@ public class View {
         for (String message : messages) {
             io.println(message);
         }
+    }
+
+    public void displayReservationSummary(Reservation reservation) {
+        io.printf("Start: %s%n",
+                reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)));
+        io.printf("End: %s%n",
+                reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)));
+        io.printf("Total: $%s%n",
+                reservation.getTotal());
     }
 
 

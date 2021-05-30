@@ -80,12 +80,15 @@ public class Controller {
         }
         view.displayReservations(reservations, host);
         Reservation reservation = view.makeReservation(host, guest);
-        Result<Reservation> result = reservationService.add(reservation);
-        if(!result.isSuccess()) {
-            view.displayStatus(false, result.getErrorMessages());
-        } else {
-            String successMessage = String.format("Reservation %s created.", result.getPayload().getReservationId());
-            view.displayStatus(true, successMessage);
+        view.displayReservationSummary(reservation);
+        if (view.isOkay()) {
+            Result<Reservation> result = reservationService.add(reservation);
+            if (!result.isSuccess()) {
+                view.displayStatus(false, result.getErrorMessages());
+            } else {
+                String successMessage = String.format("Reservation %s created.", result.getPayload().getReservationId());
+                view.displayStatus(true, successMessage);
+            }
         }
         view.enterToContinue();
     }
