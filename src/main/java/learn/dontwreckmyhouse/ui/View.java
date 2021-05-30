@@ -98,7 +98,7 @@ public class View {
 
     public Guest chooseGuest(List<Guest> guests) {
         if (guests.size() == 0) {
-            io.println("No guests found");
+            io.println("No guests found.");
             return null;
         }
 
@@ -120,6 +120,33 @@ public class View {
             return null;
         }
         return guests.get(index - 1);
+    }
+
+    public Reservation chooseReservation(List<Reservation> reservations) {
+        if (reservations.size() == 0) {
+            io.println("No reservations found.");
+        }
+
+        int index = 1;
+        for (Reservation reservation : reservations.stream().collect(Collectors.toList())) {
+            io.printf("%s: ID: %s, %s - %s, Guest: %s, %s Email: %s%n", index++,
+                    reservation.getReservationId(),
+                    reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
+                    reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
+                    reservation.getGuest().getLastName(),
+                    reservation.getGuest().getFirstName(),
+                    reservation.getGuest().getEmail());
+        }
+        index--;
+
+        io.println("0: Exit");
+        String message = String.format("Select a reservation by its index [0-%s]: ", index);
+
+        index = io.readInt(message, 0, index);
+        if (index <= 0) {
+            return null;
+        }
+        return reservations.get(index - 1);
     }
 
     public boolean isOkay(){
@@ -174,8 +201,8 @@ public class View {
         for (Reservation reservation : reservations) {
             io.printf("ID: %s, %s - %s, Guest: %s, %s, Email: %s, Total: $%s%n",
                     reservation.getReservationId(),
-                    reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)),
-                    reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)),
+                    reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
+                    reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
                     reservation.getGuest().getFirstName(),
                     reservation.getGuest().getLastName(),
                     reservation.getGuest().getEmail(),
@@ -223,11 +250,20 @@ public class View {
 
     public void displayReservationSummary(Reservation reservation) {
         io.printf("Start: %s%n",
-                reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)));
+                reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
         io.printf("End: %s%n",
-                reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)));
+                reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)));
         io.printf("Total: $%s%n",
                 reservation.getTotal());
+    }
+
+    public Reservation editReservation(Reservation reservation) {
+        displayHeader(String.format("Editing Reservation %s%n", reservation.getReservationId()));
+        reservation.setStartDate(io.readLocalDate(String.format("Start (%s): ",
+                reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)))));
+        reservation.setEndDate(io.readLocalDate(String.format("End (%s): ",
+                reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)))));
+        return reservation;
     }
 
 

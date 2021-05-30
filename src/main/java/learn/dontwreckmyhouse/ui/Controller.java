@@ -98,9 +98,36 @@ public class Controller {
         view.enterToContinue();
     }
 
-    private void editAReservation() throws DataException {
+    private void editAReservation() throws DataException, FileNotFoundException {
         view.displayHeader(MainMenuOption.EDIT_A_RESERVATION.getMessage());
-
+        Guest guest = selectGuest();
+        if (guest == null) {
+            return;
+        }
+        Host host = selectHost();
+        if (host == null) {
+            return;
+        }
+        List<Reservation> filteredReservations = null;
+        filteredReservations = reservationService.findReservationsByHostIdAndGuestId(host.getHostId(), guest.getGuestId());
+        view.displayReservations(reservationService.findReservationsByHostId(host.getHostId()), host);
+        Reservation reservation = view.chooseReservation(filteredReservations);
+        if (reservation == null) {
+            return;
+        }
+        view.editReservation(reservation);
+        reservation.updateTotal();
+        view.displayReservationSummary(reservation);
+        if (view.isOkay()) {
+            Result<Reservation> result = reservationService.update(reservation);
+            if (!result.isSuccess()) {
+                view.displayStatus(false, result.getErrorMessages());
+            } else {
+                String successMessage = String.format("Reservation %s successfully edited.", result.getPayload().getReservationId());
+                view.displayStatus(true, successMessage);
+            }
+        }
+        view.enterToContinue();
     }
 
     private void cancelAReservation() throws DataException {
@@ -118,10 +145,10 @@ public class Controller {
         int selection = view.selectViewGuestsForReservationOption();
         Guest guest = null;
         switch (selection) {
-            case 1 :
+            case 1:
                 guest = view.chooseGuestByEmail(guestService.findAll());
                 break;
-            case 2 :
+            case 2:
                 guest = view.chooseGuest(guestService.findByLastName(view.getGuestLastNamePrefix()));
                 break;
         }
@@ -137,10 +164,10 @@ public class Controller {
         int selection = view.selectViewReservationsForHostOption();
         Host host = null;
         switch (selection) {
-            case 1 :
+            case 1:
                 host = view.chooseHostByEmail(hostService.findAll());
                 break;
-            case 2 :
+            case 2:
                 host = view.chooseHost(hostService.findByLastName(view.getHostNamePrefix()));
                 break;
         }

@@ -4,11 +4,13 @@ import learn.dontwreckmyhouse.data.DataException;
 import learn.dontwreckmyhouse.data.GuestRepository;
 import learn.dontwreckmyhouse.data.HostRepository;
 import learn.dontwreckmyhouse.data.ReservationRepository;
+import learn.dontwreckmyhouse.models.Guest;
 import learn.dontwreckmyhouse.models.Reservation;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReservationService {
 
@@ -32,6 +34,12 @@ public class ReservationService {
         return reservationRepository.findReservation(hostId, reservationId);
     }
 
+    public List<Reservation> findReservationsByHostIdAndGuestId(String hostId, int guestId) throws DataException, FileNotFoundException {
+        return reservationRepository.findReservationsByHostId(hostId).stream()
+                .filter(r -> r.getGuest().getGuestId() == guestId)
+                .collect(Collectors.toList());
+    }
+
     public Result<Reservation> add(Reservation reservation) throws DataException, FileNotFoundException {
         Result<Reservation> result = validate(reservation);
         if (!result.isSuccess()) {
@@ -44,13 +52,7 @@ public class ReservationService {
     public Result<Reservation> update(Reservation reservation) throws DataException, FileNotFoundException {
 
         Result<Reservation> result;
-        result = deleteById(reservation.getHost().getHostId(), reservation.getReservationId());
-        if (result.isSuccess()) {
-            String message = String.format("Reservation id %s was not found.", reservation.getReservationId());
-            result.addErrorMessage(message);
-        }
-
-        result = validate(reservation);
+        result = validateUpdate(reservation);
         if (reservation.getReservationId() <= 0) {
             result.addErrorMessage("Reservation `id` is required.");
         }
@@ -92,6 +94,27 @@ public class ReservationService {
         }
 
         return result;
+    }
+
+    private Result<Reservation> validateUpdate(Reservation reservation) throws DataException, FileNotFoundException {
+        Result<Reservation> result = validateNulls(reservation);
+
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        validateFieldsForUpdate(reservation, result);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        validateChildrenExist(reservation, result);
+        if (!result.isSuccess()) {
+            return result;
+        }
+
+        return result;
+
     }
 
     private Result<Reservation> validateNulls(Reservation reservation) {
@@ -148,6 +171,31 @@ public class ReservationService {
 
         if (
                 reservationRepository.findReservationsByHostId(reservation.getHost().getHostId()).stream()
+                        .anyMatch(r -> r.getStartDate().equals(reservation.getStartDate()))) {
+            result.addErrorMessage("Reservation conflicts with an existing reservation");
+        }
+    }
+
+    private void validateFieldsForUpdate(Reservation reservation, Result<Reservation> result) throws DataException, FileNotFoundException {
+        if (reservation.getStartDate().isBefore(LocalDate.now()) ||
+                reservation.getEndDate().isBefore(LocalDate.now())) {
+            result.addErrorMessage("Reservation cannot be booked in the past");
+        }
+
+        if (reservation.getStartDate().isAfter(reservation.getEndDate())) {
+            result.addErrorMessage("Reservation start date cannot be after the end date");
+        }
+
+        if (
+                reservationRepository.findReservationsByHostId(reservation.getHost().getHostId()).stream()
+                        .filter(r -> r.getReservationId() != reservation.getReservationId())
+                        .anyMatch(r -> r.getEndDate().isAfter(reservation.getStartDate()))) {
+            result.addErrorMessage("Reservation conflicts with an existing reservation");
+        }
+
+        if (
+                reservationRepository.findReservationsByHostId(reservation.getHost().getHostId()).stream()
+                        .filter(r -> r.getReservationId() != reservation.getReservationId())
                         .anyMatch(r -> r.getStartDate().equals(reservation.getStartDate()))) {
             result.addErrorMessage("Reservation conflicts with an existing reservation");
         }

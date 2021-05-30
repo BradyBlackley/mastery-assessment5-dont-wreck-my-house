@@ -144,4 +144,12 @@ public class ReservationServiceTest {
         Result<Reservation> result = service.deleteById("3edda6bc-ab95-49a8-8962-d50b53f84b15", 1);
         assertTrue(result.isSuccess());
     }
+
+    @Test
+    void shouldUpdateFound() throws DataException, FileNotFoundException {
+        Reservation reservation =
+                service.findReservation("3edda6bc-ab95-49a8-8962-d50b53f84b15", 1);
+        reservation.setEndDate(LocalDate.now().plusDays(5));
+        assertTrue(service.update(reservation).isSuccess());
+    }
 }
