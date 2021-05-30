@@ -4,6 +4,7 @@ import learn.dontwreckmyhouse.data.DataException;
 import learn.dontwreckmyhouse.domain.GuestService;
 import learn.dontwreckmyhouse.domain.HostService;
 import learn.dontwreckmyhouse.domain.ReservationService;
+import learn.dontwreckmyhouse.models.Guest;
 import learn.dontwreckmyhouse.models.Host;
 import learn.dontwreckmyhouse.models.Reservation;
 
@@ -78,14 +79,28 @@ public class Controller {
     }
 
     private void makeAReservation() throws DataException {
-
+        view.displayHeader(MainMenuOption.MAKE_A_RESERVATION.getMessage());
+        int selection = view.selectViewGuestsForReservationOption();
+        Guest guest = null;
+        switch (selection) {
+            case 1 :
+                guest = view.chooseGuestByEmail(guestService.findAll());
+                break;
+            case 2 :
+                guest = view.chooseGuest(guestService.findByLastName(view.getGuestLastNamePrefix()));
+                break;
+        }
+        view.displayGuest(guest);
+        view.enterToContinue();
     }
 
     private void editAReservation() throws DataException {
+        view.displayHeader(MainMenuOption.EDIT_A_RESERVATION.getMessage());
 
     }
 
     private void cancelAReservation() throws DataException {
+        view.displayHeader(MainMenuOption.CANCEL_A_RESERVATION.getMessage());
 
     }
 

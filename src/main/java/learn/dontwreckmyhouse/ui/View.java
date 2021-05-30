@@ -1,12 +1,11 @@
 package learn.dontwreckmyhouse.ui;
 
+import learn.dontwreckmyhouse.models.Guest;
 import learn.dontwreckmyhouse.models.Host;
 import learn.dontwreckmyhouse.models.Reservation;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,7 +33,13 @@ public class View {
 
     public int selectViewReservationsForHostOption() {
         io.println("1. Find Host by Email");
-        io.println("2. Find by Last Name");
+        io.println("2. Find Host by Last Name");
+        return io.readInt("Select an option [1-2]:", 1, 2);
+    }
+
+    public int selectViewGuestsForReservationOption() {
+        io.println("1. Find Guest by Email");
+        io.println("2. Find Guest by Last Name");
         return io.readInt("Select an option [1-2]:", 1, 2);
     }
 
@@ -79,6 +84,48 @@ public class View {
         return io.readRequiredString("Host last name starts with: ");
     }
 
+    public Guest chooseGuestByEmail(List<Guest> guests) {
+        String guestEmail = io.readString("Guest Email: ");
+        Guest guest = guests.stream()
+                .filter(h -> h.getEmail().equals(guestEmail))
+                .findFirst()
+                .orElse(null);
+        if (guest == null) {
+            displayStatus(false, String.format("No guest with email %s found.", guestEmail));
+        }
+        return guest;
+    }
+
+    public Guest chooseGuest(List<Guest> guests) {
+        if (guests.size() == 0) {
+            io.println("No guests found");
+            return null;
+        }
+
+        int index = 1;
+        for (Guest guest : guests.stream().limit(25).collect(Collectors.toList())) {
+            io.printf("%s: %s, %s, %s, %s%n", index++, guest.getFirstName(),
+                    guest.getLastName(), guest.getEmail(), guest.getPhone());
+        }
+        index--;
+
+        if (guests.size() > 25) {
+            io.println("More than 25 guests found. Showing first 25. Please refine your search");
+        }
+        io.println("0: Exit");
+        String message = String.format("Select a guest by their index [0-%s]: ", index);
+
+        index = io.readInt(message, 0, index);
+        if (index <= 0) {
+            return null;
+        }
+        return guests.get(index - 1);
+    }
+
+    public String getGuestLastNamePrefix() {
+        return io.readRequiredString("Guest last name starts with: ");
+    }
+
     public void displayHost(Host host) {
         if (host == null) {
             io.println("Host not found.");
@@ -90,6 +137,18 @@ public class View {
                 host.getState());
     }
 
+    public void displayGuest(Guest guest) {
+        if (guest == null) {
+            io.println("Guest not found.");
+            return;
+        }
+        io.printf("%s %s, %s, %s, %s%n",
+                guest.getFirstName(),
+                guest.getLastName(),
+                guest.getEmail(),
+                guest.getPhone(),
+                guest.getState());
+    }
 
     public void displayReservations(List<Reservation> reservations, Host host) {
         if (reservations == null || reservations.isEmpty()) {
