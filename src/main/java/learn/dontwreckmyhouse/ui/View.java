@@ -126,6 +126,16 @@ public class View {
         return io.readRequiredString("Guest last name starts with: ");
     }
 
+    public Reservation makeReservation(Host host, Guest guest) {
+        Reservation reservation = new Reservation();
+        reservation.setHost(host);
+        reservation.setGuest(guest);
+        reservation.setStartDate(io.readLocalDate("Start [MM/DD/YYYY]:"));
+        reservation.setEndDate(io.readLocalDate("End [MM/DD/YYYY]:"));
+        reservation.updateTotal();
+        return reservation;
+    }
+
     public void displayHost(Host host) {
         if (host == null) {
             io.println("Host not found.");

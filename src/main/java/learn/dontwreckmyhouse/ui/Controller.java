@@ -4,6 +4,7 @@ import learn.dontwreckmyhouse.data.DataException;
 import learn.dontwreckmyhouse.domain.GuestService;
 import learn.dontwreckmyhouse.domain.HostService;
 import learn.dontwreckmyhouse.domain.ReservationService;
+import learn.dontwreckmyhouse.domain.Result;
 import learn.dontwreckmyhouse.models.Guest;
 import learn.dontwreckmyhouse.models.Host;
 import learn.dontwreckmyhouse.models.Reservation;
@@ -60,37 +61,32 @@ public class Controller {
 
     private void viewReservationsForHost() throws DataException, FileNotFoundException {
         view.displayHeader(MainMenuOption.VIEW_RESERVATIONS_FOR_HOST.getMessage());
-        int selection = view.selectViewReservationsForHostOption();
         List<Reservation> reservations = null;
-        Host host = null;
-        switch (selection) {
-            case 1 :
-                host = view.chooseHostByEmail(hostService.findAll());
-                break;
-            case 2 :
-                host = view.chooseHost(hostService.findByLastName(view.getHostNamePrefix()));
-                break;
-        }
+        Host host = selectHost();
         if (host != null) {
             reservations = reservationService.findReservationsByHostId(host.getHostId());
         }
         view.displayReservations(reservations, host);
-            view.enterToContinue();
+        view.enterToContinue();
     }
 
-    private void makeAReservation() throws DataException {
+    private void makeAReservation() throws DataException, FileNotFoundException {
         view.displayHeader(MainMenuOption.MAKE_A_RESERVATION.getMessage());
-        int selection = view.selectViewGuestsForReservationOption();
-        Guest guest = null;
-        switch (selection) {
-            case 1 :
-                guest = view.chooseGuestByEmail(guestService.findAll());
-                break;
-            case 2 :
-                guest = view.chooseGuest(guestService.findByLastName(view.getGuestLastNamePrefix()));
-                break;
+        Guest guest = selectGuest();
+        Host host = selectHost();
+        List<Reservation> reservations = null;
+        if (host != null) {
+            reservations = reservationService.findReservationsByHostId(host.getHostId());
         }
-        view.displayGuest(guest);
+        view.displayReservations(reservations, host);
+        Reservation reservation = view.makeReservation(host, guest);
+        Result<Reservation> result = reservationService.add(reservation);
+        if(!result.isSuccess()) {
+            view.displayStatus(false, result.getErrorMessages());
+        } else {
+            String successMessage = String.format("Reservation %s created.", result.getPayload().getReservationId());
+            view.displayStatus(true, successMessage);
+        }
         view.enterToContinue();
     }
 
@@ -108,6 +104,37 @@ public class Controller {
         String lastNamePrefix = view.getHostNamePrefix();
         List<Host> hosts = hostService.findByLastName(lastNamePrefix);
         return view.chooseHost(hosts);
+    }
+
+    private Guest selectGuest() throws DataException {
+        int selection = view.selectViewGuestsForReservationOption();
+        Guest guest = null;
+        switch (selection) {
+            case 1 :
+                guest = view.chooseGuestByEmail(guestService.findAll());
+                break;
+            case 2 :
+                guest = view.chooseGuest(guestService.findByLastName(view.getGuestLastNamePrefix()));
+                break;
+        }
+        view.displayMessage("Guest selected:");
+        view.displayGuest(guest);
+        view.enterToContinue();
+        return guest;
+    }
+
+    private Host selectHost() throws DataException {
+        int selection = view.selectViewReservationsForHostOption();
+        Host host = null;
+        switch (selection) {
+            case 1 :
+                host = view.chooseHostByEmail(hostService.findAll());
+                break;
+            case 2 :
+                host = view.chooseHost(hostService.findByLastName(view.getHostNamePrefix()));
+                break;
+        }
+        return host;
     }
 
 }
