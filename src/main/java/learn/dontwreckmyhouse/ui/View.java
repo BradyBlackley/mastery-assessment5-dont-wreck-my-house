@@ -3,6 +3,11 @@ package learn.dontwreckmyhouse.ui;
 import learn.dontwreckmyhouse.models.Host;
 import learn.dontwreckmyhouse.models.Reservation;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,7 +76,7 @@ public class View {
     }
 
     public String getHostNamePrefix() {
-        return io.readRequiredString("Forager last name starts with: ");
+        return io.readRequiredString("Host last name starts with: ");
     }
 
     public void displayHost(Host host) {
@@ -92,14 +97,16 @@ public class View {
             return;
         }
         displayHost(host);
+        reservations.sort(Comparator.comparing(Reservation::getStartDate));
         for (Reservation reservation : reservations) {
-            io.printf("ID: %s, %s - %s, Guest: %s, %s, Email: %s%n",
+            io.printf("ID: %s, %s - %s, Guest: %s, %s, Email: %s, Total: $%s%n",
                     reservation.getReservationId(),
-                    reservation.getStartDate().toString(),
-                    reservation.getEndDate().toString(),
+                    reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)),
+                    reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG)),
                     reservation.getGuest().getFirstName(),
                     reservation.getGuest().getLastName(),
-                    reservation.getGuest().getEmail());
+                    reservation.getGuest().getEmail(),
+                    reservation.getTotal());
         }
     }
 

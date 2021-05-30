@@ -59,7 +59,6 @@ public class Controller {
 
     private void viewReservationsForHost() throws DataException, FileNotFoundException {
         view.displayHeader(MainMenuOption.VIEW_RESERVATIONS_FOR_HOST.getMessage());
-        //TODO: let user choose to find host by email or last name
         int selection = view.selectViewReservationsForHostOption();
         List<Reservation> reservations = null;
         Host host = null;
