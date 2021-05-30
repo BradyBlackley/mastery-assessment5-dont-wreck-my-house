@@ -4,6 +4,7 @@ import learn.dontwreckmyhouse.models.Host;
 import learn.dontwreckmyhouse.models.Reservation;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class View {
 
@@ -22,7 +23,7 @@ public class View {
             min = Math.min(min, option.getValue());
             max = Math.max(max, option.getValue());
         }
-        String message = String.format("Select [%s-%s]: ", min, max - 1);
+        String message = String.format("Select [%s-%s]: ", min, max);
         return MainMenuOption.fromValue(io.readInt(message, min, max));
     }
 
@@ -44,6 +45,35 @@ public class View {
         return host;
     }
 
+    public Host chooseHost(List<Host> hosts) {
+        if (hosts.size() == 0) {
+            io.println("No hosts found");
+            return null;
+        }
+
+        int index = 1;
+        for (Host host : hosts.stream().limit(25).collect(Collectors.toList())) {
+            io.printf("%s: %s, %s, %s%n", index++, host.getLastName(), host.getCity(), host.getState());
+        }
+        index--;
+
+        if (hosts.size() > 25) {
+            io.println("More than 25 hosts found. Showing first 25. Please refine your search");
+        }
+        io.println("0: Exit");
+        String message = String.format("Select a host by their index [0-%s]: ", index);
+
+        index = io.readInt(message, 0, index);
+        if (index <= 0) {
+            return null;
+        }
+        return hosts.get(index - 1);
+    }
+
+    public String getHostNamePrefix() {
+        return io.readRequiredString("Forager last name starts with: ");
+    }
+
     public void displayHost(Host host) {
         if (host == null) {
             io.println("Host not found.");
@@ -54,7 +84,6 @@ public class View {
                 host.getCity(),
                 host.getState());
     }
-
 
 
     public void displayReservations(List<Reservation> reservations, Host host) {

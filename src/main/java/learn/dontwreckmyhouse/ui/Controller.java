@@ -66,13 +66,16 @@ public class Controller {
         switch (selection) {
             case 1 :
                 host = view.chooseHostByEmail(hostService.findAll());
-                reservations = reservationService.findReservationsByHostId(host.getHostId());
                 break;
             case 2 :
+                host = view.chooseHost(hostService.findByLastName(view.getHostNamePrefix()));
                 break;
         }
+        if (host != null) {
+            reservations = reservationService.findReservationsByHostId(host.getHostId());
+        }
         view.displayReservations(reservations, host);
-        view.enterToContinue();
+            view.enterToContinue();
     }
 
     private void makeAReservation() throws DataException {
@@ -87,5 +90,10 @@ public class Controller {
 
     }
 
+    private Host getHost() throws DataException {
+        String lastNamePrefix = view.getHostNamePrefix();
+        List<Host> hosts = hostService.findByLastName(lastNamePrefix);
+        return view.chooseHost(hosts);
+    }
 
 }

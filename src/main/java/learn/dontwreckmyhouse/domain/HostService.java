@@ -5,6 +5,7 @@ import learn.dontwreckmyhouse.data.HostRepository;
 import learn.dontwreckmyhouse.models.Host;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HostService {
 
@@ -24,6 +25,12 @@ public class HostService {
 
     public Host findByEmail(String email) throws DataException {
         return repository.findByEmail(email);
+    }
+
+    public List<Host> findByLastName(String prefix) throws DataException {
+        return repository.findAll().stream()
+                .filter(h -> h.getLastName().startsWith(prefix))
+                .collect(Collectors.toList());
     }
 
     public Result<Host> add(Host host) throws DataException {
