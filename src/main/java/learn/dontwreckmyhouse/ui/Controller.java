@@ -10,7 +10,11 @@ import learn.dontwreckmyhouse.models.Host;
 import learn.dontwreckmyhouse.models.Reservation;
 
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Controller {
 
@@ -142,6 +146,9 @@ public class Controller {
         }
         List<Reservation> filteredReservations = null;
         filteredReservations = reservationService.findReservationsByHostIdAndGuestId(host.getHostId(), guest.getGuestId());
+        filteredReservations = filteredReservations.stream()
+                .filter(r -> r.getStartDate().isAfter(LocalDate.now()))
+                .collect(Collectors.toList());
         view.displayReservations(filteredReservations, host);
         Reservation reservation = view.chooseReservation(filteredReservations);
         if (reservation == null) {
