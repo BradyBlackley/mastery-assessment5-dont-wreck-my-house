@@ -1,6 +1,8 @@
 package learn.dontwreckmyhouse.data;
 
 import learn.dontwreckmyhouse.models.Reservation;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class ReservationFileRepository implements ReservationRepository {
 
     private static final String HEADER = "id,start_date,end_date,guest_id,total";
@@ -17,7 +20,7 @@ public class ReservationFileRepository implements ReservationRepository {
     private final GuestFileRepository guestRepository;
     private final HostFileRepository hostRepository;
 
-    public ReservationFileRepository(String directory,
+    public ReservationFileRepository(@Value("${reservationFilePath}")String directory,
                                      GuestFileRepository guestRepository,
                                      HostFileRepository hostRepository) {
         this.directory = directory;

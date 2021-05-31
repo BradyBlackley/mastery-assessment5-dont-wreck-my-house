@@ -3,10 +3,12 @@ package learn.dontwreckmyhouse.domain;
 import learn.dontwreckmyhouse.data.DataException;
 import learn.dontwreckmyhouse.data.GuestRepository;
 import learn.dontwreckmyhouse.models.Guest;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class GuestService {
 
     private final GuestRepository repository;

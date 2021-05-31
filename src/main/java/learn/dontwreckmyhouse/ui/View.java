@@ -3,6 +3,7 @@ package learn.dontwreckmyhouse.ui;
 import learn.dontwreckmyhouse.models.Guest;
 import learn.dontwreckmyhouse.models.Host;
 import learn.dontwreckmyhouse.models.Reservation;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -10,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class View {
 
     private final ConsoleIO io;

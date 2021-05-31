@@ -1,17 +1,20 @@
 package learn.dontwreckmyhouse.data;
 
 import learn.dontwreckmyhouse.models.Guest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class GuestFileRepository implements GuestRepository {
 
     private static final String HEADER = "guest_id,first_name,last_name,email,phone,state";
     private final String filePath;
 
-    public GuestFileRepository(String directory) {
+    public GuestFileRepository(@Value("${guestFilePath}")String directory) {
         this.filePath = directory;
     }
 

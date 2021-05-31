@@ -4,14 +4,15 @@ import learn.dontwreckmyhouse.data.DataException;
 import learn.dontwreckmyhouse.data.GuestRepository;
 import learn.dontwreckmyhouse.data.HostRepository;
 import learn.dontwreckmyhouse.data.ReservationRepository;
-import learn.dontwreckmyhouse.models.Guest;
 import learn.dontwreckmyhouse.models.Reservation;
+import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
