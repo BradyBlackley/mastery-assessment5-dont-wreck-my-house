@@ -130,9 +130,32 @@ public class Controller {
         view.enterToContinue();
     }
 
-    private void cancelAReservation() throws DataException {
+    private void cancelAReservation() throws DataException, FileNotFoundException {
         view.displayHeader(MainMenuOption.CANCEL_A_RESERVATION.getMessage());
-
+        Guest guest = selectGuest();
+        if (guest == null) {
+            return;
+        }
+        Host host = selectHost();
+        if (host == null) {
+            return;
+        }
+        List<Reservation> filteredReservations = null;
+        filteredReservations = reservationService.findReservationsByHostIdAndGuestId(host.getHostId(), guest.getGuestId());
+        view.displayReservations(filteredReservations, host);
+        Reservation reservation = view.chooseReservation(filteredReservations);
+        if (reservation == null) {
+            return;
+        }
+        view.CancelReservation(reservation);
+        int reservationId = reservation.getReservationId();
+        Result<Reservation> result = reservationService.deleteById(reservation.getHost().getHostId(), reservation.getReservationId());
+        if (!result.isSuccess()) {
+            view.displayStatus(false, result.getErrorMessages());
+        } else {
+            String successMessage = String.format("Reservation %s successfully cancelled.", reservationId);
+            view.displayStatus(true, successMessage);
+        }
     }
 
     private Host getHost() throws DataException {

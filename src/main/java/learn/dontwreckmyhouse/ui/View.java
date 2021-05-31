@@ -257,13 +257,16 @@ public class View {
                 reservation.getTotal());
     }
 
-    public Reservation editReservation(Reservation reservation) {
+    public void editReservation(Reservation reservation) {
         displayHeader(String.format("Editing Reservation %s%n", reservation.getReservationId()));
         reservation.setStartDate(io.readLocalDate(String.format("Start (%s): ",
                 reservation.getStartDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)))));
         reservation.setEndDate(io.readLocalDate(String.format("End (%s): ",
                 reservation.getEndDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)))));
-        return reservation;
+    }
+
+    public void CancelReservation(Reservation reservation) {
+        String.format("Reservation ID: %s", reservation.getReservationId());
     }
 
 
